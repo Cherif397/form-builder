@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Select Component</title>
+  <style>
+    :host {
+      display: block;
+      font-family: Arial, sans-serif;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+  <select id="custom-select">
+    <!-- Les options seront générées dynamiquement par JavaScript -->
+  </select>
+<custom-select></custom-select>
+  <script>
+    customElements.define('custom-select', class CustomSelect extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.data = [];
+      }
+
+      connectedCallback() {
+        this.render();
+        this.loadData();
+      }
+
+      async loadData() {
+        // Chargez vos données JSON ici (par exemple, via une requête Ajax)
+        try {
+          const response = await fetch('http://127.0.0.1:5500/source.json'); // Remplacez par votre source de données
+          const data = await response.json();
+          this.data = data;
+          this.populateSelect();
+        } catch (error) {
+          console.error('Erreur de chargement des données :', error);
+        }
+      }
+
+      populateSelect() {
+        const select = this.shadowRoot.querySelector('#custom-select');
+
+        // Générez les options à partir des données JSON
+        this.data.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item.value;
+          option.textContent = item.label;
+          select.appendChild(option);
+        });
+      }
+
+      render() {
+        const template = document.createElement('template');
+        template.innerHTML = `
+          <style>
+            /* Ajoutez des styles personnalisés ici si nécessaire */
+          </style>
+          <select id="custom-select">
+            <!-- Les options seront générées dynamiquement par JavaScript -->
+          </select>
+        `;
+        this.shadowRoot.appendChild(template.content.cloneNode(true));
+      }
+    });
+  </script>
+</body>
+</html>
