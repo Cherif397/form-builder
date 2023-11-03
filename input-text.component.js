@@ -10,13 +10,14 @@ export default class MonInputText extends HTMLElement {
     const label = this.getAttribute('label')
     const id = this.getAttribute('id')
     const name = this.getAttribute('name')
+    const type = this.getAttribute('type')
     const onChange = this.getAttribute('onChange')
 
     this.shadowRoot.innerHTML = `
         
     <div class="">
       <label for="${id}">${label}</label>
-      <input type="text" id="${id}" name="${name}" onchange="${onChange}">
+      <input type="${type}" id="${id}" name="${name}" onchange="${onChange}">
     </div>
       `
     this.inputElement = this.shadowRoot.querySelector('input');
